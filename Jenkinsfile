@@ -14,28 +14,27 @@ pipeline {
 
         stage('Checkout Code') {
             steps {
-                git credentialsId: 'git-creds',
-                    url: https://github.com/Riddhi0809/Pawmise.git,
-                    branch: 'main'
+                git branch: 'main',
+                    url: 'https://github.com/Riddhi0809/Pawmise.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                bat 'npm install'
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'npm test || echo "Tests skipped"'
+                bat 'npm test || exit 0'
             }
         }
 
         stage('SonarCloud Analysis') {
             steps {
                 withSonarQubeEnv('SonarCloud') {
-                    sh 'sonar-scanner'
+                    bat 'sonar-scanner'
                 }
             }
         }
@@ -50,28 +49,10 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh '''
-                    cd backend
-                    docker build -t $DOCKER_IMAGE_NAME:$DOCKER_TAG .
+                bat '''
+                cd backend
+                docker build -t %DOCKER_IMAGE_NAME%:%DOCKER_TAG% .
                 '''
-            }
-        }
-
-        stage('Docker Login') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                }
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                sh 'docker push $DOCKER_IMAGE_NAME:$DOCKER_TAG'
             }
         }
     }
