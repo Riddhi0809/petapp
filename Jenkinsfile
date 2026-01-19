@@ -2,20 +2,15 @@ pipeline {
     agent any
 
     tools {
+        jdk 'jdk17'
         nodejs 'node18'
-    }
-
-    environment {
-        DOCKER_IMAGE_NAME = "riddhijadhav0809/pawmise-backend"
-        DOCKER_TAG = "latest"
     }
 
     stages {
 
         stage('Checkout Code') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/Riddhi0809/Pawmise.git'
+                checkout scm
             }
         }
 
@@ -44,15 +39,6 @@ pipeline {
                 timeout(time: 5, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                bat '''
-                cd backend
-                docker build -t %DOCKER_IMAGE_NAME%:%DOCKER_TAG% .
-                '''
             }
         }
     }
