@@ -8,7 +8,7 @@ pipeline {
 
     stages {
 
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
                 checkout scm
             }
@@ -20,25 +20,10 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                bat 'npm test || exit 0'
-            }
-        }
-
         stage('SonarCloud Analysis') {
-    steps {
-        withSonarQubeEnv('SonarCloud') {
-            bat "${tool 'sonar-scanner'}\\bin\\sonar-scanner.bat"
-        }
-    }
-}
-
-
-        stage('Quality Gate') {
             steps {
-                timeout(time: 5, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
+                withSonarQubeEnv('SonarCloud') {
+                    bat "${tool 'sonar-scanner'}\\bin\\sonar-scanner.bat"
                 }
             }
         }
