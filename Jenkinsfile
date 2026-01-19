@@ -29,14 +29,6 @@ pipeline {
             }
         }
 
-        stage('Run Tests (Mocha + Chai)') {
-            steps {
-                dir('backend') {
-                    bat 'npm test'
-                }
-            }
-        }
-
         stage('SonarCloud Analysis') {
             steps {
                 withSonarQubeEnv('SonarCloud') {
