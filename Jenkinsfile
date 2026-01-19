@@ -27,12 +27,13 @@ pipeline {
         }
 
         stage('SonarCloud Analysis') {
-            steps {
-                withSonarQubeEnv('SonarCloud') {
-                    bat 'sonar-scanner'
-                }
-            }
+    steps {
+        withSonarQubeEnv('SonarCloud') {
+            bat "${tool 'sonar-scanner'}\\bin\\sonar-scanner.bat"
         }
+    }
+}
+
 
         stage('Quality Gate') {
             steps {
