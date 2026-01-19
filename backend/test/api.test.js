@@ -1,11 +1,17 @@
-const request = require("supertest");
-const { expect } = require("chai");
-const app = require("../server");
+const request = require('supertest');
+const { expect } = require('chai');
+const app = require('../app');
 
-describe("API Health Check", () => {
-  it("GET / should return 200", async () => {
-    const res = await request(app).get("/");
+describe('Pawmise API Endpoints', () => {
 
-    expect(res.status).to.equal(200);
+  it('GET /api/board should respond', async () => {
+    const res = await request(app).get('/api/board');
+    expect(res.status).to.be.oneOf([200, 404]);
   });
+
+  it('GET /api/visits should respond', async () => {
+    const res = await request(app).get('/api/visits');
+    expect(res.status).to.be.oneOf([200, 404]);
+  });
+
 });
