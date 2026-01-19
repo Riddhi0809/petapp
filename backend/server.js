@@ -53,3 +53,7 @@ app.post('/api/payment/orders', async (req, res) => {
 /* -------------------- Server -------------------- */
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));
+if (process.env.NODE_ENV !== 'test') {
+  mongoose.connect(process.env.MONGO_URI);
+}
+
